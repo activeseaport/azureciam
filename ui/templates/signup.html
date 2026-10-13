@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Create account{% endblock %}
+{% block content %}
+<h1>Create an account</h1>
+<p class="sub">Use your email and a strong password to continue.</p>
+<form id="signup-form" method="post" action="{{ url_for('signup') }}">
+  <label for="idisplayNameInput">Display Name</label>
+  <input id="idisplayNameInput" data-testid="idisplayNameInput" name="displayName" placeholder="Display Name" type="text" maxlength="120" aria-label="Display Name" autocomplete="nickname" class="ext-input ext-text-box" required>
+  <label for="username">Email</label>
+  <input id="username" name="username" type="email" placeholder="name@example.com" autocomplete="username" required autofocus>
+  <label for="password">Password</label>
+  <input id="password" name="password" type="password" placeholder="Create a password" autocomplete="new-password">
+  <div class="password-requirements" aria-live="polite">
+    <div class="password-requirement" data-rule="length"><span class="check">✓</span> At least 8 characters</div>
+    <div class="password-requirement" data-rule="lower"><span class="check">✓</span> One lowercase letter</div>
+    <div class="password-requirement" data-rule="upper"><span class="check">✓</span> One uppercase letter</div>
+    <div class="password-requirement" data-rule="number"><span class="check">✓</span> One number</div>
+    <div class="password-requirement" data-rule="symbol"><span class="check">✓</span> One special character</div>
+  </div>
+  <label for="confirm_password">Confirm password</label>
+  <input id="confirm_password" name="confirm_password" type="password" placeholder="Re-enter your password" autocomplete="new-password">
+  <button type="submit" class="continue-button" disabled>Continue</button>
+</form>
+{% include "_flash_messages.html" %}
+<div class="links"><a href="{{ url_for('signin_code') }}">Already have an account?</a></div>
+<script>
+  (function () {
+    const form = document.getElementById('signup-form');
+    const displayNameInput = document.getElementById('idisplayNameInput');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirm_password');
+    const submitButton = form.querySelector('button[type="submit"]');
+
+    if (!form || !displayNameInput || !usernameInput || !passwordInput || !confirmPasswordInput || !submitButton) return;
+
+    function passwordRules(value) {
+      return {
+        length: value.length >= 8,
+        lower: /[a-z]/.test(value),
+        upper: /[A-Z]/.test(value),
+        number: /\d/.test(value),
+        symbol: /[^A-Za-z0-9]/.test(value)
+      };
+    }
+
+    function updateRequirements() {
+      const value = passwordInput.value;
+      const confirmValue = confirmPasswordInput.value;
+      const rules = passwordRules(value);
+
+      document.querySelectorAll('.password-requirement').forEach(function (item) {
+        const rule = item.dataset.rule;
+        item.classList.toggle('met', !!rules[rule]);
+      });
+
+      const usernameFilled = usernameInput.value.trim().length > 0 && usernameInput.validity.valid;
+      const displayNameFilled = displayNameInput.value.trim().length > 0;
+      const passwordFilled = value.length > 0 && confirmValue.length > 0;
+      const passwordMatches = value === confirmValue && passwordFilled;
+      const passwordValid = passwordFilled && Object.values(rules).every(Boolean) && passwordMatches;
+      const canSubmit = displayNameFilled && usernameFilled && passwordValid;
+
+      submitButton.disabled = !canSubmit;
+      submitButton.style.background = canSubmit ? '#0f6cbd' : '#cfcfd4';
+      submitButton.style.cursor = canSubmit ? 'pointer' : 'not-allowed';
+      submitButton.style.opacity = '1';
+    }
+
+    [displayNameInput, usernameInput, passwordInput, confirmPasswordInput].forEach(function (input) {
+      input.addEventListener('input', updateRequirements);
+      input.addEventListener('change', updateRequirements);
+    });
+
+    updateRequirements();
+  })();
+</script>
+{% endblock %}

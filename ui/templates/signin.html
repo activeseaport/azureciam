@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Sign in{% endblock %}
+{% block content %}
+<h1>Sign in</h1>
+<div class="tabs" role="tablist" aria-label="Sign-in methods">
+  <a class="tab {% if active_tab == 'code' %}active{% endif %}" href="{{ url_for('signin_code') }}" role="tab" aria-selected="{{ 'true' if active_tab == 'code' else 'false' }}">Sign in with Code</a>
+  <a class="tab {% if active_tab == 'password' %}active{% endif %}" href="{{ url_for('signin') }}" role="tab" aria-selected="{{ 'true' if active_tab == 'password' else 'false' }}">Sign in with Password</a>
+</div>
+<form id="signin-email-form" method="post" action="{{ url_for(submit_endpoint) }}">
+  <label for="username">Email</label>
+  <input id="username" name="username" type="email" placeholder="name@example.com" autocomplete="username" required autofocus>
+  <button type="submit" disabled>Continue</button>
+</form>
+{% include "_flash_messages.html" %}
+<div class="links">
+  <a href="{{ url_for('reset_code' if active_tab == 'code' else 'reset') }}">Forgot password?</a>
+  <a style="visibility:hidden;" href="{{ url_for('signup') }}">Create an account</a>
+  <a style="visibility:hidden;" href="{{ url_for('create_code') }}">Create New Password</a> 
+</div>
+<script>
+  (function () {
+    const emailInput = document.getElementById('username');
+    const submitButton = document.querySelector('#signin-email-form button[type="submit"]');
+    if (!emailInput || !submitButton) return;
+
+    function updateButtonState() {
+      const valid = emailInput.value.trim().length > 0 && emailInput.validity.valid;
+      submitButton.disabled = !valid;
+    }
+
+    emailInput.addEventListener('input', updateButtonState);
+    updateButtonState();
+  })();
+</script>
+{% endblock %}

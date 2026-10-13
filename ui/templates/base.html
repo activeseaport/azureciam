@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}CIAM Native Auth{% endblock %}</title>
+<style>
+  body {
+    font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    margin: 0; padding: 3rem 1rem; background: #f4f5f7; color: #1b1b1f;
+  }
+  main { max-width: 30rem; margin: 0 auto; background: #fff; border-radius: 12px;
+         padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+  h1 { font-size: 1.35rem; margin: 0 0 .25rem; }
+  p.sub { margin: 0 0 1.5rem; color: #5b5b66; }
+  label { display: block; font-weight: 600; margin: 1rem 0 .35rem; }
+  input[type=text], input[type=email], input[type=password] {
+    width: 100%; padding: .6rem .7rem; border: 1px solid #c4c4cc;
+    border-radius: 6px; font-size: 1rem; box-sizing: border-box; background: #fff;
+    color: #000;
+  }
+  button { margin-top: 1.25rem; width: 100%; padding: .65rem; font-size: 1rem;
+           border: 0; border-radius: 6px; background: #0f6cbd; color: #fff;
+           cursor: pointer; }
+  button:disabled,
+  button[disabled] {
+    background: #cfcfd4 !important; color: #ffffff !important; cursor: not-allowed !important; opacity: 1 !important;
+  }
+  button.secondary { background: #e6e6ea; color: #1b1b1f; margin-top: .5rem; }
+  .links { margin-top: 1.5rem; font-size: .9rem; display: flex; gap: 1rem; }
+  .tabs {
+    display: flex;
+    gap: .5rem;
+    margin: 1rem 0 1.25rem;
+    border-bottom: 1px solid #d6d6de;
+    padding-bottom: .4rem;
+  }
+  .tab {
+    text-decoration: none;
+    color: #4d4d57;
+    padding: .35rem .6rem;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    font-size: .92rem;
+  }
+  .tab:hover { background: #f3f7fc; color: #0f6cbd; }
+  .tab.active {
+    color: #0f6cbd;
+    border-color: #b7d6f2;
+    background: #eaf3fc;
+    font-weight: 600;
+  }
+  a { color: #0f6cbd; }
+  .flash { padding: .7rem .9rem; border-radius: 6px; margin-top: .75rem;
+           white-space: pre-line; }
+  .flash.error { background: #fdeded; color: #8a1c1c; display: flex; }
+  .flash.success { background: #eaf6ec; color: #1b5e20; }
+  .flash-detail { position: absolute; visibility: hidden; }
+  dl { margin: 0; }
+  dt { font-weight: 600; margin-top: .8rem; }
+  dd { margin: .1rem 0 0; word-break: break-all; font-family: ui-monospace, monospace;
+       font-size: .85rem; color: #444; }
+  form.inline { display: inline; }
+  .password-wrap { position: relative; }
+  .password-wrap input { padding-right: 3.2rem; }
+  .password-toggle {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 0;
+    background: transparent;
+    color: #0f6cbd;
+    font-size: .8rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: .2rem .4rem;
+    line-height: 1;
+    width: auto;
+    margin: 0;
+  }
+  .password-requirements {
+    margin: .75rem 0 0;
+    padding: .6rem .75rem;
+    border: 1px solid #e2e7ef;
+    border-radius: 8px;
+    background: #f8fafc;
+  }
+  .password-requirement {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    color: #5b5b66;
+    font-size: .9rem;
+    margin: .25rem 0;
+  }
+  .password-requirement .check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 50%;
+    background: #e5e7eb;
+    color: transparent;
+    font-size: .75rem;
+    font-weight: 700;
+    transition: all .2s ease;
+  }
+  .password-requirement.met {
+    color: #1f7a4d;
+  }
+  .password-requirement.met .check {
+    background: #1f9d61;
+    color: #fff;
+  }
+</style>
+</head>
+<body>
+<main>
+  {% block content %}{% endblock %}
+</main>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('input[type="password"]').forEach(function (input) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'password-wrap';
+      input.parentNode.insertBefore(wrapper, input);
+      wrapper.appendChild(input);
+
+      const toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.className = 'password-toggle';
+      toggle.type = 'button';
+      toggle.textContent = 'Show';
+      toggle.setAttribute('aria-label', 'Show password');
+      toggle.addEventListener('click', function () {
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        toggle.textContent = isPassword ? 'Hide' : 'Show';
+        toggle.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+      });
+      wrapper.appendChild(toggle);
+    });
+  });
+</script>
+</body>
+</html>

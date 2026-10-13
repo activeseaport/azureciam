@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Signed in{% endblock %}
+{% block content %}
+<h1>Successfully Logged In</h1>
+<p class="sub">Welcome back! {{ result.display_name }}</p>
+<p class="sub">Signed in with native authentication.</p>
+
+<dl>
+  <dt>access_token</dt><dd>{{ mask(result.access_token) }}</dd>
+  <dt>refresh_token</dt><dd>{{ mask(result.refresh_token) }}</dd>
+  <dt>expires in</dt><dd>{{ result.expires_in }}s (expired: {{ result.is_expired }})</dd>
+  <dt>scope</dt><dd>{{ result.scope or '-' }}</dd>
+</dl>
+
+{% if result.claims %}
+  <h1 style="margin-top:2rem;font-size:1.05rem">ID token claims</h1>
+  <dl>
+    {% for key, value in result.claims | dictsort %}
+      <dt>{{ key }}</dt><dd>{{ value }}</dd>
+    {% endfor %}
+  </dl>
+{% endif %}
+
+<form method="post" action="{{ url_for('refresh') }}">
+  <button type="submit">Refresh access token</button>
+</form>
+{% include "_flash_messages.html" %}
+<form method="post" action="{{ url_for('signout') }}">
+  <button class="secondary" type="submit">Sign out</button>
+</form>
+{% endblock %}

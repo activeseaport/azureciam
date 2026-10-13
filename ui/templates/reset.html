@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Reset password{% endblock %}
+{% block content %}
+<h1>Reset your password</h1>
+<p class="sub">We'll email you a verification code.</p>
+<form id="reset-email-form" method="post" action="{{ url_for('reset') }}">
+  <label for="username">Email</label>
+  <input id="username" name="username" type="email" placeholder="name@example.com" autocomplete="username" required autofocus>
+  <button type="submit" disabled>Send code</button>
+</form>
+{% include "_flash_messages.html" %}
+<div class="links"><a href="{{ url_for('signin_code') }}">Back to sign in</a></div>
+<script>
+  (function () {
+    const emailInput = document.getElementById('username');
+    const submitButton = document.querySelector('#reset-email-form button[type="submit"]');
+    if (!emailInput || !submitButton) return;
+
+    function updateButtonState() {
+      const valid = emailInput.value.trim().length > 0 && emailInput.validity.valid;
+      submitButton.disabled = !valid;
+    }
+
+    emailInput.addEventListener('input', updateButtonState);
+    updateButtonState();
+  })();
+</script>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% for category, message in get_flashed_messages(with_categories=true) %}
+  <div class="flash {{ category }}" role="{{ 'alert' if category == 'error' else 'status' }}">
+    {% if category == 'error' %}
+      <span>We couldn't complete your request. Please try again.</span>
+      <span class="flash-detail" aria-hidden="true">{{ message }}</span>
+    {% else %}
+      {{ message }}
+    {% endif %}
+  </div>
+{% endfor %}

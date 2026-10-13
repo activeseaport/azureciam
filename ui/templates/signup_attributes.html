@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}About you{% endblock %}
+{% block content %}
+<h1>A bit more about you</h1>
+<p class="sub">Your user flow requires these details.</p>
+<form method="post" action="{{ url_for('signup_next') }}">
+  {% for attribute in state.required_attributes %}
+    <label for="{{ attribute.name }}">{{ attribute.name }}</label>
+    <input id="{{ attribute.name }}" name="{{ attribute.name }}" type="text"
+          placeholder="Enter {{ attribute.name }}"
+           {% if attribute.required %}required{% endif %}>
+  {% endfor %}
+  <button type="submit">Finish</button>
+</form>
+{% include "_flash_messages.html" %}
+{% endblock %}
