@@ -6,6 +6,11 @@
   <a class="tab {% if active_tab == 'code' %}active{% endif %}" href="{{ url_for('signin_code') }}" role="tab" aria-selected="{{ 'true' if active_tab == 'code' else 'false' }}">Sign in with Code</a>
   <a class="tab {% if active_tab == 'password' %}active{% endif %}" href="{{ url_for('signin') }}" role="tab" aria-selected="{{ 'true' if active_tab == 'password' else 'false' }}">Sign in with Password</a>
 </div>
+{% if active_tab == 'password' %}
+<div id="password-tab-content">
+  Please note that your password will need to be reset if your last login was via a code.
+</div>
+{% endif %}
 <form id="signin-email-form" method="post" action="{{ url_for(submit_endpoint) }}">
   <label for="username">Email</label>
   <input id="username" name="username" type="email" placeholder="name@example.com" autocomplete="username" required autofocus>
